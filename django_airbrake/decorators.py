@@ -3,7 +3,7 @@ def airbrake(f):
         try:
             f(*args, **kwargs)
         except Exception, e:
-            from airbrake.utils.client import Client
+            from .utils.client import Client
             c = Client()
             c.notify(exception=e)
             raise e

@@ -14,4 +14,4 @@ In your `settings.py` file you're going to want to create a dictionary called `A
     }
 
 
-Once you've setup your Airbrake settings you just need to add `airbrake` to your `INSTALLED_APPS` and `airbrake.middleware.AirbrakeNotifierMiddleware` to your `MIDDLEWARE_CLASSES` and restart your server. If your code is as poorly written as mine, the errors will start flowing into Airbrake shortly.
+Once you've setup your Airbrake settings you just need to add `django_airbrake` to your `INSTALLED_APPS` and `django_airbrake.middleware.AirbrakeNotifierMiddleware` to your `MIDDLEWARE_CLASSES` and restart your server. If your code is as poorly written as mine, the errors will start flowing into Airbrake shortly.

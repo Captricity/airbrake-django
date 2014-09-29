@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.core.exceptions import MiddlewareNotUsed
-from airbrake.utils.client import Client
+from .utils.client import Client
 
 class AirbrakeNotifierMiddleware(object):
     def __init__(self):
