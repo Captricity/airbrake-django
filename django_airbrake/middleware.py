@@ -8,4 +8,8 @@ class AirbrakeNotifierMiddleware(object):
 
     def process_exception(self, request, exception):
         if hasattr(settings, 'AIRBRAKE') and not settings.AIRBRAKE.get('DISABLE', False):
-            self.client.notify(exception=exception, request=request)
+            try:
+                self.client.notify(exception=exception, request=request)
+            # Ignore failures from issues like rate limiting
+            except:
+                pass
