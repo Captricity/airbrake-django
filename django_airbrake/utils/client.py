@@ -62,8 +62,7 @@ class Client(object):
         notifier_em = etree.SubElement(notice_em, 'notifier')
 
         etree.SubElement(notifier_em, 'name').text = 'django-airbrake'
-        etree.SubElement(notifier_em, 'version').text = '0.0.2'
-        etree.SubElement(notifier_em, 'url').text = 'http://example.com'
+        etree.SubElement(notifier_em, 'version').text = '0.0.3'
 
         if request:
             request_em = etree.SubElement(notice_em, 'request')
@@ -79,6 +78,12 @@ class Client(object):
             cb,_,_ = resolve(request.path)
             etree.SubElement(request_em, 'component').text = str(cb.__module__)
             etree.SubElement(request_em, 'action').text = str(cb.__name__)
+            if 'context' in self.settings:
+                cgi_em = etree.SubElement(request_em, 'cgi-data')
+                for key, val in self.settings['context'].items():
+                    var = etree.SubElement(cgi_em, 'var')
+                    var.set('key', str(key))
+                    var.text = str(val)
 
             if len(request.POST):
                 params_em = etree.SubElement(request_em, 'params')
