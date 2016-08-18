@@ -52,7 +52,7 @@ class Client(object):
             raise Exception(Client.ERRORS[status])
 
     def _generate_xml(self, exception=None, request=None):
-        _,_,trace = sys.exc_info()
+        _, _, trace = sys.exc_info()
         notice_em = etree.Element('notice', version='2.0')
 
         tb = traceback.extract_tb(trace)
@@ -63,6 +63,8 @@ class Client(object):
 
         etree.SubElement(notifier_em, 'name').text = 'django-airbrake'
         etree.SubElement(notifier_em, 'version').text = '0.0.3'
+        url_el = etree.SubElement(notifier_em, 'url')
+        url_el.text = 'http://example.com'
 
         if request:
             request_em = etree.SubElement(notice_em, 'request')
@@ -74,22 +76,15 @@ class Client(object):
             url = '%s://%s%s' % (scheme, request.get_host(),
                 request.get_full_path())
             etree.SubElement(request_em, 'url').text = str(url)
+            url_el.text = url
 
-            cb,_,_ = resolve(request.path)
+            cb, _, _ = resolve(request.path)
             etree.SubElement(request_em, 'component').text = str(cb.__module__)
             etree.SubElement(request_em, 'action').text = str(cb.__name__)
             if 'context' in self.settings:
                 cgi_em = etree.SubElement(request_em, 'cgi-data')
                 for key, val in self.settings['context'].items():
                     var = etree.SubElement(cgi_em, 'var')
-                    var.set('key', str(key))
-                    var.text = str(val)
-
-            if len(request.POST):
-                params_em = etree.SubElement(request_em, 'params')
-
-                for key, val in request.POST.items():
-                    var = etree.SubElement(params_em, 'var')
                     var.set('key', str(key))
                     var.text = str(val)
 
