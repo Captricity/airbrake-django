@@ -2,7 +2,7 @@ import sys
 import traceback
 
 from django.conf import settings
-from django.core.urlresolvers import resolve
+from django.urls import resolve
 from lxml import etree
 from six.moves.urllib.request import urlopen, Request
 
