@@ -1,10 +1,10 @@
+import sys
+import traceback
+
 from django.conf import settings
 from django.core.urlresolvers import resolve
-import sys
-import urllib.request, urllib.error, urllib.parse
-import traceback
 from lxml import etree
-
+from six.moves.urllib.request import urlopen, Request
 
 class Client(object):
     API_URL = '%s://airbrake.io/notifier_api/v2/notices'
@@ -42,8 +42,8 @@ class Client(object):
         }
 
         payload = self._generate_xml(exception=exception, request=request)
-        req = urllib.request.Request(self.url, payload, headers)
-        resp = urllib.request.urlopen(req, timeout=self.settings['TIMEOUT'])
+        req = Request(self.url, payload, headers)
+        resp = urlopen(req, timeout=self.settings['TIMEOUT'])
         status = resp.getcode()
 
         if status == 200:
