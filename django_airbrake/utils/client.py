@@ -62,7 +62,7 @@ class Client(object):
         notifier_em = etree.SubElement(notice_em, 'notifier')
 
         etree.SubElement(notifier_em, 'name').text = 'django-airbrake'
-        etree.SubElement(notifier_em, 'version').text = '0.0.3'
+        etree.SubElement(notifier_em, 'version').text = '0.0.4'
         url_el = etree.SubElement(notifier_em, 'url')
         url_el.text = 'http://example.com'
 
