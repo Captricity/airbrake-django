@@ -1,10 +1,10 @@
-from django.conf import settings
-from django.core.urlresolvers import resolve
 import sys
-import urllib2
 import traceback
-from lxml import etree
 
+from django.conf import settings
+from django.urls import resolve
+from lxml import etree
+from six.moves.urllib.request import urlopen, Request
 
 class Client(object):
     API_URL = '%s://airbrake.io/notifier_api/v2/notices'
@@ -42,8 +42,8 @@ class Client(object):
         }
 
         payload = self._generate_xml(exception=exception, request=request)
-        req = urllib2.Request(self.url, payload, headers)
-        resp = urllib2.urlopen(req, timeout=self.settings['TIMEOUT'])
+        req = Request(self.url, payload, headers)
+        resp = urlopen(req, timeout=self.settings['TIMEOUT'])
         status = resp.getcode()
 
         if status == 200:
@@ -83,12 +83,12 @@ class Client(object):
             etree.SubElement(request_em, 'action').text = str(cb.__name__)
             if 'context' in self.settings:
                 cgi_em = etree.SubElement(request_em, 'cgi-data')
-                for key, val in self.settings['context'].items():
+                for key, val in list(self.settings['context'].items()):
                     var = etree.SubElement(cgi_em, 'var')
                     var.set('key', str(key))
                     var.text = str(val)
 
-            session = request.session.items()
+            session = list(request.session.items())
             if len(session):
                 session_em = etree.SubElement(request_em, 'session')
                 for key, val in session:
